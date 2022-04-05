@@ -1,7 +1,7 @@
 import setuptools
 
 name = 'tapes'
-dependencies = []
+dependencies = ['podgen', 'beautifulsoup4', 'requests']
 dependencies_dev = []
 console_scripts = ['tapes = tapes:entry_point']
 
