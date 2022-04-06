@@ -1,6 +1,7 @@
 import re
 import urllib.parse
-from typing import Optional, List
+from typing import List
+from datetime import datetime, timedelta, timezone
 
 import bs4
 import requests
@@ -23,6 +24,7 @@ def extract_podcasts(page_url) -> List[Podcast]:
             current_podcast_name = stripped_text(i)
         elif i.name == 'table' and not i.find('table'):
             episodes = []
+            publication_date = datetime.fromtimestamp(0, timezone.utc)
 
             for row_elem in i.find_all('tr'):
                 for link_elem in row_elem.find_all('a'):
@@ -37,9 +39,13 @@ def extract_podcasts(page_url) -> List[Podcast]:
                                 f'"{flac_media_url}" without detecting a '
                                 f'preceding title.')
                         else:
-                            media = Media(flac_media_url, type='audio/flac')
-                            episodes.append(
-                                Episode(title=episode_title, media=media))
+                            episode = Episode(
+                                title=episode_title,
+                                media=Media(flac_media_url, type='audio/flac'),
+                                publication_date=publication_date)
+
+                            episodes.append(episode)
+                            publication_date += timedelta(days=1)
 
             if episodes:
                 podcast = Podcast(
