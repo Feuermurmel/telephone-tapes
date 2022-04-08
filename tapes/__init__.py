@@ -18,10 +18,12 @@ def parse_args():
 
 
 def main(url, output_dir):
+    # Podgen generates some warning that are not helpful in our case.
     warnings.simplefilter('ignore', NotSupportedByItunesWarning)
     warnings.simplefilter('ignore', UserWarning)
 
     for i, p in enumerate(extract_podcasts(url), 1):
+        # Add sequential numbers to the feed file names.
         output_path = output_dir / f'{i:02}_{p.name.replace(" ", "_")}.xml'
         output_path.write_text(p.rss_str())
 
