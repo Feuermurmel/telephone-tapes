@@ -30,18 +30,18 @@ def extract_podcasts(page_url) -> List[Podcast]:
                 for link_elem in row_elem.find_all('a'):
                     href = link_elem.get('href')
 
-                    if href and href.endswith('.flac'):
+                    if href and href.endswith('.mp3'):
                         episode_title = stripped_text(row_elem.find('td'))
-                        flac_media_url = urllib.parse.urljoin(page_url, href)
+                        mp3_media_url = urllib.parse.urljoin(page_url, href)
 
                         if current_podcast_name is None:
                             log(f'Warning: Found link to FLAC file '
-                                f'"{flac_media_url}" without detecting a '
+                                f'"{mp3_media_url}" without detecting a '
                                 f'preceding title.')
                         else:
                             episode = Episode(
                                 title=episode_title,
-                                media=Media(flac_media_url, type='audio/flac'),
+                                media=Media(mp3_media_url),
                                 publication_date=publication_date)
 
                             episodes.append(episode)
